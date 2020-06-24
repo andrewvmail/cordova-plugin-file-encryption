@@ -28,7 +28,7 @@
     </config-file>
     <source-file src="src/android/MyApplication.java" target-dir="src/com/lateph" />
     <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
-        <application android:name="my.plugin.MyApplication" />
+        <application android:name="com.lateph.MyApplication" />
     </edit-config>
   </platform>
   <!-- iOS -->
