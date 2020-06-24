@@ -26,6 +26,10 @@
       <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
       <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     </config-file>
+    <source-file src="src/android/MyApplication.java" target-dir="src/com/lateph" />
+    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
+        <application android:name="my.plugin.MyApplication" />
+    </edit-config>
   </platform>
   <!-- iOS -->
   <platform name="ios">
