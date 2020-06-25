@@ -12,7 +12,7 @@ var PLUGIN_NAME = 'FileEncryption';
 var FileEncryption = {
   encrypt: function (path, password, success, error) {
     //if (!path || arguments.length === 0) return;
-    exec(success, error, PLUGIN_NAME, 'encrypt', [path, password]);
+    exec(success, error, PLUGIN_NAME, 'encrypt', [path, password, '']);
   },
   decrypt: function (path, password, fileName, success, error) {
     //if (!path || arguments.length === 0) return;
