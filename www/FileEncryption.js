@@ -14,9 +14,9 @@ var FileEncryption = {
     //if (!path || arguments.length === 0) return;
     exec(success, error, PLUGIN_NAME, 'encrypt', [path, password]);
   },
-  decrypt: function (path, password, success, error) {
+  decrypt: function (path, password, fileName, success, error) {
     //if (!path || arguments.length === 0) return;
-    exec(success, error, PLUGIN_NAME, 'decrypt', [path, password]);
+    exec(success, error, PLUGIN_NAME, 'decrypt', [path, password, fileName]);
   },
 };
 
