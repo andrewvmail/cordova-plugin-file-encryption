@@ -1,4 +1,5 @@
 package com.prsuhas;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +21,7 @@ import org.json.JSONException;
 
 import android.net.Uri;
 import android.content.Context;
+import android.util.Log;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
@@ -76,8 +78,12 @@ public class FileEncryption extends CordovaPlugin {
         try {
             if (action.equals(ENCRYPT_ACTION)) {
                 // create encrypted output stream
-                FileInputStream fis = new FileInputStream(path);
-                FileOutputStream fos = new FileOutputStream(path.concat(".crypt"));
+                Uri uriSource  = Uri.parse(path);
+                File fileSource = new File(uriSource.getPath());
+
+                FileInputStream fis = new FileInputStream(fileSource);
+                Log.d("trx", uriSource.getPath().concat(".crypt"));
+                FileOutputStream fos = new FileOutputStream(uriSource.getPath().concat(".crypt"));
                 byte[] key = ("GanTeng" + password).getBytes("UTF-8");
                 MessageDigest sha = MessageDigest.getInstance("SHA-1");
                 key = sha.digest(key);
