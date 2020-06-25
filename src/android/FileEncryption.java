@@ -24,6 +24,7 @@ import android.content.Context;
 import android.util.Log;
 
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -110,12 +111,34 @@ public class FileEncryption extends CordovaPlugin {
                 // write to temp file
 //                this.writeFile(INPUT_STREAM, cos, callbackContext);
             }
-//            else if (action.equals(DECRYPT_ACTION)) {
+            else if (action.equals(DECRYPT_ACTION)) {
 //                // create decrypted input stream
-//                InputStream decryptedInputStream = CRYPTO.getCipherInputStream(INPUT_STREAM, ENTITY);
-//                // write to temp file
-//                this.writeFile(decryptedInputStream, OUTPUT_STREAM, callbackContext);
-//            }
+                Uri uriSource  = Uri.parse(path);
+                File fileSource = new File(uriSource.getPath());
+
+                FileInputStream fis = new FileInputStream(fileSource);
+                FileOutputStream fos = new FileOutputStream(uriSource.getPath().concat(".jpg"));
+                byte[] key = ("GanTeng" + password).getBytes("UTF-8");
+                MessageDigest sha = MessageDigest.getInstance("SHA-1");
+                key = sha.digest(key);
+                key = Arrays.copyOf(key,16);
+                SecretKeySpec sks = new SecretKeySpec(key, "AES");
+                Cipher cipher = Cipher.getInstance("AES");
+                cipher.init(Cipher.DECRYPT_MODE, sks);
+                CipherInputStream cis = new CipherInputStream(fis, cipher);
+                int b;
+                byte[] d = new byte[8];
+                while((b = cis.read(d)) != -1) {
+                    fos.write(d, 0, b);
+                }
+                fos.flush();
+                fos.close();
+                cis.close();
+
+                Uri uri = Uri.parse(uriSource.getPath().concat(".jpg"));
+                File file = new File(uri.getPath());
+                callbackContext.success(file.getPath());
+            }
 //
 //            // delete original file after write
 //            boolean deleted = SOURCE_FILE.delete();
