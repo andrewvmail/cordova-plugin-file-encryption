@@ -58,11 +58,12 @@ public class FileEncryption extends CordovaPlugin {
 
             String path = args.getString(0);
             String pass = args.getString(1);
+            String fileName = args.getString(2);
             Uri normalizedPath = resourceApi.remapUri(Uri.parse(path));
 
             LOG.d(TAG, "normalizedPath: "+ normalizedPath.getPath().toString());
 
-            this.cryptOp(normalizedPath.toString(), pass, action, callbackContext);
+            this.cryptOp(normalizedPath.toString(), pass, fileName, action, callbackContext);
 
             return true;
         }
@@ -70,7 +71,7 @@ public class FileEncryption extends CordovaPlugin {
         return false;
     }
 
-    private void cryptOp(String path, String password, String action, CallbackContext callbackContext) {
+    private void cryptOp(String path, String password,String fileName, String action, CallbackContext callbackContext) {
         // init crypto variables
 //        this.initCrypto(path, password, callbackContext);
 
@@ -115,17 +116,27 @@ public class FileEncryption extends CordovaPlugin {
 //                // create decrypted input stream
                 Uri uriSource  = Uri.parse(path);
                 File fileSource = new File(uriSource.getPath());
-
+                Log.d("trx", "start 1");
+                String outh = fileSource.getAbsoluteFile().getParent() +'/'+ fileName;
+                Log.d("trx", "apth 1 " +outh);
                 FileInputStream fis = new FileInputStream(fileSource);
-                FileOutputStream fos = new FileOutputStream(uriSource.getPath().concat(".jpg"));
+                FileOutputStream fos = new FileOutputStream(outh);
                 byte[] key = ("GanTeng" + password).getBytes("UTF-8");
+
+                Log.d("trx", "start 2");
                 MessageDigest sha = MessageDigest.getInstance("SHA-1");
                 key = sha.digest(key);
                 key = Arrays.copyOf(key,16);
                 SecretKeySpec sks = new SecretKeySpec(key, "AES");
                 Cipher cipher = Cipher.getInstance("AES");
                 cipher.init(Cipher.DECRYPT_MODE, sks);
+
+
+                Log.d("trx", "start 3");
+
                 CipherInputStream cis = new CipherInputStream(fis, cipher);
+
+                Log.d("trx", "start 4");
                 int b;
                 byte[] d = new byte[8];
                 while((b = cis.read(d)) != -1) {
@@ -135,9 +146,10 @@ public class FileEncryption extends CordovaPlugin {
                 fos.close();
                 cis.close();
 
-                Uri uri = Uri.parse(uriSource.getPath().concat(".jpg"));
-                File file = new File(uri.getPath());
-                callbackContext.success(file.getPath());
+                Log.d("trx", "start 5");
+                Uri uri = Uri.parse(outh);
+                callbackContext.success(uri.getPath());
+                Log.d("trx", "start 6");
             }
 //
 //            // delete original file after write
